@@ -315,57 +315,6 @@ describe "configatron" do
 
   end
 
-  describe 'configure_from_yaml' do
-
-    it 'should configure itself from a yaml file' do
-      configatron.futurama.should be_nil
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'futurama.yml'))
-      configatron.futurama.robots.bender.should == 'Bender The Robot'
-    end
-
-    it 'should not remove previously defined params' do
-      configatron.futurama.mutants.leela = 'Leela'
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'futurama.yml'))
-      configatron.futurama.robots.bender.should == 'Bender The Robot'
-      configatron.futurama.mutants.leela = 'Leela'
-    end
-
-    it "should fail silently if the file doesn't exist" do
-      lambda{configatron.configure_from_yaml('i_dont_exist.yml')}.should_not raise_error
-    end
-
-    it "should be able to load a specific hash from the file" do
-      configatron.others.should be_nil
-      configatron.survivors.should be_nil
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'lost.yml'), :hash => "survivors")
-      configatron.others.should be_nil
-      configatron.survivors.should be_nil
-      configatron.on_island.jack.should == 'Jack Shepherd'
-    end
-
-    it 'should run the yaml through ERB' do
-      configatron.math.should be_nil
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'math.yml'))
-      configatron.math.should_not be_nil
-      configatron.math.four.should == 4
-    end
-
-    it 'should handle merged keys' do
-      configatron.food.should be_nil
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'merge.yml'))
-      configatron.food.should_not be_nil
-      configatron.food.list.should == [:apple, :banana, :tomato, :brocolli, :spinach]
-    end
-    
-    it "should handle complex yaml" do
-      configatron.complex_development.bucket.should be_nil
-      configatron.configure_from_yaml(File.join(File.dirname(__FILE__), 'complex.yml'))
-      configatron.complex_development.bucket.should == 'develop'
-      configatron.complex_development.access_key_id.should == 'access_key'
-    end
-    
-  end
-
   it 'should return a parameter' do
     configatron.foo = :bar
     configatron.foo.should == :bar
